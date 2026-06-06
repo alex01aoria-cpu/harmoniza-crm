@@ -1,0 +1,10 @@
+.git
+.next
+node_modules
+apps/web/.next
+apps/web/node_modules
+apps/api/.venv
+apps/api/.pytest_cache
+apps/api/harmoniza_crm.db
+*.pyc
+__pycache__
