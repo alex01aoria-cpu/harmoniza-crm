@@ -4,8 +4,14 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.schemas.lead import LeadWithSourceCreate, LeadWithSourceRead
+from app.schemas.pipeline import (
+    PipelineTransitionRequest,
+    PipelineTransitionResponse,
+    PipelineStageHistoryRead,
+)
 from app.services.auth_service import AuthService
 from app.services.lead_service import LeadService
+from app.services.pipeline_service import PipelineService
 
 router = APIRouter(prefix="/leads", tags=["leads"])
 security = HTTPBearer()
@@ -26,6 +32,25 @@ def list_leads(
         limit=limit,
     )
     return [LeadWithSourceRead.model_validate(lead) for lead in leads]
+
+
+@router.patch("/{lead_id}/stage", response_model=PipelineTransitionResponse)
+def transition_stage(
+    lead_id: int,
+    payload: PipelineTransitionRequest,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db),
+) -> PipelineTransitionResponse:
+    alterado_por = AuthService.decode_access_token(credentials.credentials)
+    lead, history = PipelineService(db).transition_stage(
+        lead_id=lead_id,
+        payload=payload,
+        alterado_por=alterado_por,
+    )
+    return PipelineTransitionResponse(
+        lead=LeadWithSourceRead.model_validate(lead),
+        history=PipelineStageHistoryRead.model_validate(history),
+    )
 
 
 @router.post("", response_model=LeadWithSourceRead, status_code=status.HTTP_201_CREATED)
