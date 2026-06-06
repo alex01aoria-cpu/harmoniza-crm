@@ -27,8 +27,9 @@ Crie um novo serviço a partir do GitHub usando o mesmo repositório.
 Configuração do serviço:
 
 - Root directory: `apps/api`
-- Build command: `uv sync --frozen --no-dev`
-- Start command:
+- Builder/runtime: Dockerfile do próprio diretório (`apps/api/Dockerfile`) se o Railway detectar Docker. Se preferir Nixpacks, use os comandos abaixo.
+- Build command (Nixpacks): `uv sync --frozen --no-dev`
+- Start command (Nixpacks):
 
 ```bash
 uv run alembic upgrade head && uv run python scripts/bootstrap_admin.py && uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -67,8 +68,9 @@ Crie outro serviço a partir do mesmo repositório.
 Configuração do serviço:
 
 - Root directory: `apps/web`
-- Build command: `npm ci && npm run build`
-- Start command:
+- Builder/runtime: Dockerfile do próprio diretório (`apps/web/Dockerfile`) se o Railway detectar Docker. Se preferir Nixpacks, use os comandos abaixo.
+- Build command (Nixpacks): `npm ci && npm run build`
+- Start command (Nixpacks):
 
 ```bash
 npm run start -- --hostname 0.0.0.0 --port $PORT
