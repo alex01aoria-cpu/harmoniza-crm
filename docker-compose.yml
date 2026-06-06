@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: harmoniza_crm
+      POSTGRES_USER: harmoniza
+      POSTGRES_PASSWORD: harmoniza
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    working_dir: /app
+    environment:
+      DATABASE_URL: postgresql://harmoniza:harmoniza@db:5432/harmoniza_crm
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/web.Dockerfile
+    working_dir: /app
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
