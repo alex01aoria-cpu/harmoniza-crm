@@ -2,11 +2,13 @@ from fastapi import FastAPI
 
 from app.core.config import get_settings
 from app.routers.auth import router as auth_router
+from app.routers.lead_capture import router as lead_capture_router
 from app.routers.leads import router as leads_router
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
 app.include_router(auth_router)
+app.include_router(lead_capture_router)
 app.include_router(leads_router)
 
 

@@ -34,6 +34,51 @@ class LeadWithSourceCreate(LeadBase):
     source: LeadSourceInput | None = None
 
 
+class LeadCaptureCreate(BaseModel):
+    nome: str = Field(min_length=1)
+    telefone: str = Field(min_length=8)
+    procedimento_entrada: str = Field(min_length=1)
+    canal_principal: str = "WhatsApp"
+    canal: str = Field(min_length=1)
+    origem: str | None = None
+    campanha: str | None = None
+    conjunto: str | None = None
+    anuncio: str | None = None
+    utm_source: str | None = None
+    utm_medium: str | None = None
+    utm_campaign: str | None = None
+    utm_content: str | None = None
+    utm_term: str | None = None
+    landing_origem: str | None = None
+
+    def to_lead_with_source(self) -> LeadWithSourceCreate:
+        return LeadWithSourceCreate(
+            nome=self.nome,
+            telefone=self.telefone,
+            canal_principal=self.canal_principal,
+            procedimento_entrada=self.procedimento_entrada,
+            temperatura="Fria",
+            qualificacao="Em análise",
+            status_atual="Lead nova",
+            responsavel_atual="Hermes / Triagem",
+            resumo_atual="Lead capturada com origem rastreável",
+            proxima_acao="Iniciar triagem no WhatsApp",
+            source=LeadSourceInput(
+                canal=self.canal,
+                origem=self.origem,
+                campanha=self.campanha,
+                conjunto=self.conjunto,
+                anuncio=self.anuncio,
+                utm_source=self.utm_source,
+                utm_medium=self.utm_medium,
+                utm_campaign=self.utm_campaign,
+                utm_content=self.utm_content,
+                utm_term=self.utm_term,
+                landing_origem=self.landing_origem,
+            ),
+        )
+
+
 class LeadRead(LeadBase):
     model_config = ConfigDict(from_attributes=True)
 
