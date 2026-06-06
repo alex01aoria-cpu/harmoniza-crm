@@ -4,12 +4,20 @@ from app.core.config import get_settings
 from app.routers.auth import router as auth_router
 from app.routers.lead_capture import router as lead_capture_router
 from app.routers.leads import router as leads_router
+from app.routers.tasks import router as tasks_router
+from app.routers.outcomes import router as outcomes_router
+from app.routers.dashboard import router as dashboard_router
+from app.routers.ops import router as ops_router
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
 app.include_router(auth_router)
 app.include_router(lead_capture_router)
 app.include_router(leads_router)
+app.include_router(tasks_router)
+app.include_router(outcomes_router)
+app.include_router(dashboard_router)
+app.include_router(ops_router)
 
 
 @app.get("/health")

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.lead import Lead
 from app.repositories.lead_repository import LeadRepository
 from app.schemas.lead import LeadCaptureCreate, LeadWithSourceCreate
+from app.schemas.triage import TriageUpdate
 
 
 class LeadService:
@@ -27,3 +28,13 @@ class LeadService:
             campanha=campanha,
             limit=limit,
         )
+
+    def update_triage(self, lead_id: int, payload: TriageUpdate) -> Lead | None:
+        lead = self.repository.get_by_id(lead_id)
+        if lead is None:
+            return None
+        for field, value in payload.model_dump(exclude_unset=True).items():
+            setattr(lead, field, value)
+        self.repository.db.commit()
+        self.repository.db.refresh(lead)
+        return lead

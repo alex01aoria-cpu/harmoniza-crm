@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.models.lead import Lead
 from app.models.pipeline_stage_history import PipelineStageHistory
+from app.models.loss_reason import LossReason
 from app.schemas.pipeline import PipelineTransitionRequest
 
 
@@ -23,6 +24,11 @@ class PipelineService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Lead not found",
             )
+
+        if payload.novo_status == "Perdida":
+            loss = self.db.query(LossReason).filter(LossReason.lead_id == lead_id).first()
+            if loss is None:
+                raise HTTPException(status_code=422, detail="Loss reason required before marking lead as lost")
 
         status_origem = lead.status_atual
         lead.status_atual = payload.novo_status

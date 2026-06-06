@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Lead } from "@/lib/api/leads";
 
 type LeadsTableProps = {
@@ -49,7 +50,7 @@ export function LeadsTable({ leads }: LeadsTableProps) {
             {leads.map((lead) => (
               <tr key={lead.id} className="align-top hover:bg-zinc-50">
                 <td className="px-5 py-4">
-                  <div className="font-medium text-zinc-950">{lead.nome}</div>
+                  <Link href={`/leads/${lead.id}`} className="font-medium text-zinc-950 hover:underline">{lead.nome}</Link>
                   <div className="mt-1 text-zinc-500">{lead.telefone}</div>
                   <div className="mt-1 text-xs text-zinc-400">
                     {lead.procedimento_entrada}

@@ -1,0 +1,1 @@
+export function TriageForm({ leadId }: { leadId: number }) { return <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm"><h2 className="text-lg font-semibold text-zinc-950">Triagem</h2><p className="mt-2 text-sm text-zinc-600">Atualização de triagem disponível via API: <code>PATCH /leads/{leadId}/triage</code>.</p></section>; }

@@ -118,3 +118,44 @@ export async function updateLeadStage(
     return false;
   }
 }
+
+
+export type LeadTask = {
+  id: number;
+  lead_id: number;
+  titulo: string;
+  descricao_curta: string | null;
+  responsavel: string;
+  data_limite: string;
+  status_tarefa: string;
+  prioridade: string;
+  created_at: string;
+  concluido_em: string | null;
+};
+
+export async function fetchLead(leadId: number): Promise<{ lead: Lead | null; unavailable: boolean }> {
+  if (!API_TOKEN) return { lead: null, unavailable: true };
+  try {
+    const response = await fetch(`${API_BASE_URL}/leads/${leadId}`, { headers: { Authorization: `Bearer ${API_TOKEN}` }, cache: "no-store" });
+    if (!response.ok) return { lead: null, unavailable: true };
+    return { lead: (await response.json()) as Lead, unavailable: false };
+  } catch { return { lead: null, unavailable: true }; }
+}
+
+export async function fetchTasks(filters: { overdue?: boolean } = {}): Promise<{ tasks: LeadTask[]; unavailable: boolean }> {
+  const params = new URLSearchParams();
+  if (filters.overdue) params.set("overdue", "true");
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks?${params.toString()}`, { headers: API_TOKEN ? { Authorization: `Bearer ${API_TOKEN}` } : undefined, cache: "no-store" });
+    if (!response.ok) return { tasks: [], unavailable: true };
+    return { tasks: (await response.json()) as LeadTask[], unavailable: false };
+  } catch { return { tasks: [], unavailable: true }; }
+}
+
+export async function fetchDashboardSummary<T>(): Promise<{ summary: T | null; unavailable: boolean }> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/dashboard/summary`, { headers: API_TOKEN ? { Authorization: `Bearer ${API_TOKEN}` } : undefined, cache: "no-store" });
+    if (!response.ok) return { summary: null, unavailable: true };
+    return { summary: (await response.json()) as T, unavailable: false };
+  } catch { return { summary: null, unavailable: true }; }
+}

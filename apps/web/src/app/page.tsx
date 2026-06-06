@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-50 text-zinc-950">
@@ -17,30 +19,36 @@ export default function Home() {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <a
+          <Link
             href="/login"
             className="inline-flex items-center justify-center rounded-xl bg-zinc-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-zinc-800"
           >
             Entrar no CRM
-          </a>
-          <a
+          </Link>
+          <Link
             href="/leads"
             className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
           >
             Ver inbox de leads
-          </a>
-          <a
+          </Link>
+          <Link
             href="/pipeline"
             className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
           >
             Ver pipeline comercial
-          </a>
-          <a
+          </Link>
+          <Link
+            href="/tasks"
+            className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
+          >
+            Ver tarefas
+          </Link>
+          <Link
             href="/dashboard"
             className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
           >
             Ver dashboard inicial
-          </a>
+          </Link>
         </div>
       </section>
     </main>
