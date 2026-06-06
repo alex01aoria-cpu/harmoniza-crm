@@ -1,7 +1,4 @@
 {
-  "$schema": "https://railway.com/railway.schema.json",
-  "deploy": {
-    "preDeployCommand": "bash /app/scripts/init_db.sh"
-  }
+  "$schema": "https://railway.com/railway.schema.json"
 }
 
