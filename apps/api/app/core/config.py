@@ -32,6 +32,13 @@ class Settings(BaseSettings):
         if "${{" in normalized:
             return "sqlite:///./harmoniza_crm_build.db"
 
+        # SQLAlchemy interprets the bare `postgresql://` scheme as requiring
+        # psycopg2.  Since we install psycopg3 (`psycopg[binary]`), we must
+        # use the `postgresql+psycopg` dialect so SQLAlchemy selects the
+        # correct driver.
+        if normalized.startswith("postgresql://"):
+            normalized = "postgresql+psycopg://" + normalized[len("postgresql://"):]
+
         return normalized
 
     @field_validator("secret_key", "cors_origins", mode="before")
