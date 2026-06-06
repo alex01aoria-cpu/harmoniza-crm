@@ -13,7 +13,28 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     cors_origins: str = ""
 
-    @field_validator("database_url", "secret_key", "cors_origins", mode="before")
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def resolve_database_url(cls, value: str) -> str:
+        if not isinstance(value, str):
+            return value
+
+        normalized = value.strip()
+        if len(normalized) >= 2 and normalized[0] == normalized[-1] and normalized[0] in {'"', "'"}:
+            normalized = normalized[1:-1].strip()
+
+        # During the Railway build phase, reference variables such as
+        # ${{Postgres.DATABASE_URL}} are not yet expanded — they arrive as
+        # literal strings.  SQLAlchemy cannot parse them, so we fall back to
+        # an in-memory SQLite URL so that Alembic can complete its build-time
+        # run without error.  At runtime the variable is fully resolved and
+        # the real PostgreSQL URL is used.
+        if "${{" in normalized:
+            return "sqlite:///./harmoniza_crm_build.db"
+
+        return normalized
+
+    @field_validator("secret_key", "cors_origins", mode="before")
     @classmethod
     def normalize_env_string(cls, value: str) -> str:
         if not isinstance(value, str):
