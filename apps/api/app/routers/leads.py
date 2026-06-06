@@ -1,0 +1,22 @@
+from fastapi import APIRouter, Depends, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.orm import Session
+
+from app.db.session import get_db
+from app.schemas.lead import LeadWithSourceCreate, LeadWithSourceRead
+from app.services.auth_service import AuthService
+from app.services.lead_service import LeadService
+
+router = APIRouter(prefix="/leads", tags=["leads"])
+security = HTTPBearer()
+
+
+@router.post("", response_model=LeadWithSourceRead, status_code=status.HTTP_201_CREATED)
+def create_lead(
+    payload: LeadWithSourceCreate,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db),
+) -> LeadWithSourceRead:
+    AuthService.decode_access_token(credentials.credentials)
+    lead = LeadService(db).create_manual_lead(payload)
+    return LeadWithSourceRead.model_validate(lead)
