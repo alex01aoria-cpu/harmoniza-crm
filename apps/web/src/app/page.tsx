@@ -24,6 +24,12 @@ export default function Home() {
             Entrar no CRM
           </a>
           <a
+            href="/leads"
+            className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
+          >
+            Ver inbox de leads
+          </a>
+          <a
             href="/dashboard"
             className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
           >

@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.lead import Lead
 from app.models.lead_source import LeadSource
@@ -32,3 +32,17 @@ class LeadRepository:
 
     def get_by_id(self, lead_id: int) -> Lead | None:
         return self.db.query(Lead).filter(Lead.id == lead_id).first()
+
+    def list_recent(
+        self,
+        *,
+        status_atual: str | None = None,
+        campanha: str | None = None,
+        limit: int = 50,
+    ) -> list[Lead]:
+        query = self.db.query(Lead).options(joinedload(Lead.source))
+        if status_atual:
+            query = query.filter(Lead.status_atual == status_atual)
+        if campanha:
+            query = query.join(LeadSource).filter(LeadSource.campanha == campanha)
+        return query.order_by(Lead.created_at.desc(), Lead.id.desc()).limit(limit).all()

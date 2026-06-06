@@ -70,6 +70,51 @@ def test_create_manual_lead_with_source(client, db_session) -> None:
     assert body["source"]["utm_campaign"] == "botox_junho"
 
 
+def test_list_leads_returns_recent_items_with_filters(client, db_session) -> None:
+    headers = auth_headers(client, db_session)
+    first_payload = {
+        "nome": "Carla Mendes",
+        "telefone": "47999998888",
+        "canal_principal": "WhatsApp",
+        "procedimento_entrada": "Botox",
+        "temperatura": "Quente",
+        "qualificacao": "Em análise",
+        "status_atual": "Lead nova",
+        "responsavel_atual": "Hermes / Triagem",
+        "source": {
+            "canal": "Meta Ads",
+            "campanha": "Campanha Botox Junho",
+            "utm_campaign": "botox_junho",
+        },
+    }
+    second_payload = {
+        **first_payload,
+        "nome": "Julia Santos",
+        "telefone": "47933334444",
+        "status_atual": "Qualificada",
+        "source": {
+            "canal": "Meta Ads",
+            "campanha": "Camp Skinbooster 8",
+            "utm_campaign": "skinbooster_8",
+        },
+    }
+    client.post("/leads", json=first_payload, headers=headers)
+    client.post("/leads", json=second_payload, headers=headers)
+
+    response = client.get(
+        "/leads",
+        params={"status_atual": "Lead nova", "campanha": "Campanha Botox Junho"},
+        headers=headers,
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body) == 1
+    assert body[0]["nome"] == "Carla Mendes"
+    assert body[0]["status_atual"] == "Lead nova"
+    assert body[0]["source"]["campanha"] == "Campanha Botox Junho"
+
+
 def test_create_manual_lead_requires_authentication(client) -> None:
     response = client.post(
         "/leads",

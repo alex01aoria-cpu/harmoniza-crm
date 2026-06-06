@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
@@ -9,6 +9,23 @@ from app.services.lead_service import LeadService
 
 router = APIRouter(prefix="/leads", tags=["leads"])
 security = HTTPBearer()
+
+
+@router.get("", response_model=list[LeadWithSourceRead])
+def list_leads(
+    status_atual: str | None = None,
+    campanha: str | None = None,
+    limit: int = Query(default=50, ge=1, le=100),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db),
+) -> list[LeadWithSourceRead]:
+    AuthService.decode_access_token(credentials.credentials)
+    leads = LeadService(db).list_recent_leads(
+        status_atual=status_atual,
+        campanha=campanha,
+        limit=limit,
+    )
+    return [LeadWithSourceRead.model_validate(lead) for lead in leads]
 
 
 @router.post("", response_model=LeadWithSourceRead, status_code=status.HTTP_201_CREATED)
