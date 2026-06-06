@@ -39,7 +39,7 @@ Variáveis obrigatórias:
 ```text
 DATABASE_URL=<DATABASE_URL do PostgreSQL Railway>
 ENVIRONMENT=production
-SECRET_KEY=<chave longa com mais de 32 caracteres>
+SECRET_KEY=<chave entre 32 e 45 caracteres, em uma linha, sem aspas>
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 JWT_ALGORITHM=HS256
 ADMIN_EMAIL=<email admin>

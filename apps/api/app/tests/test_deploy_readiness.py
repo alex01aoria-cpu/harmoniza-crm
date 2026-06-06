@@ -13,6 +13,18 @@ def test_settings_parses_comma_separated_cors_origins() -> None:
     ]
 
 
+def test_settings_normalizes_wrapped_quotes_in_database_url() -> None:
+    settings = Settings(database_url='"postgresql://user:pass@db.railway.internal:5432/harmoniza"')
+
+    assert settings.database_url == "postgresql://user:pass@db.railway.internal:5432/harmoniza"
+
+
+def test_settings_normalizes_wrapped_quotes_in_secret_key() -> None:
+    settings = Settings(secret_key='"short-prod-key-2026-railway-ready-45chars"')
+
+    assert settings.secret_key == "short-prod-key-2026-railway-ready-45chars"
+
+
 def test_bootstrap_admin_creates_user_when_env_values_are_present(db_session) -> None:
     created = bootstrap_admin_user(
         db_session,
