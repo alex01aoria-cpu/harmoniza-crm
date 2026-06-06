@@ -24,7 +24,12 @@ Construir a primeira versão funcional do CRM próprio da Harmoniza para:
 
 ## Status
 
-Em construção.
+V1 interna funcional, em preparação para beta operacional.
 
 Referência principal de planejamento no Brain AOR-IA™:
 - `09-revops/plano-implementacao-v1-crm-harmoniza.md`
+
+## Deploy
+
+Guia Railway:
+- `docs/deploy/railway.md`

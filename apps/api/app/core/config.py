@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     secret_key: str = "dev-secret-change-me-at-least-32-chars"
     access_token_expire_minutes: int = 60 * 24
     jwt_algorithm: str = "HS256"
+    cors_origins: str = ""
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
     model_config = SettingsConfigDict(
         env_file=".env",
