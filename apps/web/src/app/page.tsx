@@ -30,6 +30,12 @@ export default function Home() {
             Ver inbox de leads
           </a>
           <a
+            href="/pipeline"
+            className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
+          >
+            Ver pipeline comercial
+          </a>
+          <a
             href="/dashboard"
             className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-100"
           >

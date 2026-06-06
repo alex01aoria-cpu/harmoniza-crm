@@ -51,6 +51,26 @@ export type LeadsResult = {
   unavailable: boolean;
 };
 
+export const PIPELINE_STATUSES = [
+  "Lead nova",
+  "Resposta enviada",
+  "Respondeu",
+  "Triagem em andamento",
+  "Triagem concluída",
+  "Qualificada",
+  "Não qualificada",
+  "Passada para vendedora",
+  "Agendamento em aberto",
+  "Agendou",
+  "Compareceu",
+  "Comprou",
+  "Não comprou",
+  "Follow-up",
+  "Perdida",
+] as const;
+
+export type PipelineStatus = (typeof PIPELINE_STATUSES)[number];
+
 const API_BASE_URL = process.env.HARMONIZA_CRM_API_URL ?? "http://127.0.0.1:8000";
 const API_TOKEN = process.env.HARMONIZA_CRM_API_TOKEN;
 
@@ -73,5 +93,28 @@ export async function fetchLeads(filters: LeadsFilters = {}): Promise<LeadsResul
     return { leads: (await response.json()) as Lead[], unavailable: false };
   } catch {
     return { leads: [], unavailable: true };
+  }
+}
+
+export async function updateLeadStage(
+  leadId: number,
+  payload: { novo_status: string; observacao?: string },
+): Promise<boolean> {
+  if (!API_TOKEN) return false;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/leads/${leadId}/stage`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    return response.ok;
+  } catch {
+    return false;
   }
 }
