@@ -1,6 +1,3 @@
 {
-  "$schema": "https://railway.com/railway.schema.json",
-  "deploy": {
-    "preDeployCommand": "uv run alembic upgrade head && uv run python scripts/bootstrap_admin.py"
-  }
+  "$schema": "https://railway.com/railway.schema.json"
 }
